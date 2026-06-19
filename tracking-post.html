@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading... — Best Place for Tracking</title>
+    <link rel="stylesheet" href="tracking-style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <a href="tracking-index.html" class="logo"><span class="logo-icon">&#9968;</span> Best Place for Tracking</a>
+            <nav class="main-nav" id="mainNav">
+                <a href="tracking-index.html">Home</a>
+                <a href="tracking-index.html#blogs">Treks</a>
+                <a href="tracking-index.html#about">About</a>
+                <a href="tracking-index.html#contact">Contact</a>
+            </nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+
+    <!-- Post Hero -->
+    <section class="post-hero" id="postHero">
+        <img id="heroImg" src="" alt="">
+        <div class="hero-overlay"></div>
+        <div class="container post-hero-content">
+            <span class="blog-card-tag" id="postTag"></span>
+            <h1 id="postTitle"></h1>
+            <div class="post-meta">
+                <span id="postAuthor"></span>
+                <span>&#183;</span>
+                <span id="postDate"></span>
+                <span>&#183;</span>
+                <span id="postRead"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Post Content -->
+    <article class="post-content">
+        <a href="tracking-index.html" class="back-link">&#8592; Back to all treks</a>
+
+        <!-- Trek Info Bar -->
+        <div class="post-info-bar" id="infoBar">
+            <div class="post-info-item">
+                <span class="post-info-label">Difficulty</span>
+                <span class="post-info-value" id="infoDifficulty"></span>
+            </div>
+            <div class="post-info-item">
+                <span class="post-info-label">Duration</span>
+                <span class="post-info-value" id="infoDuration"></span>
+            </div>
+            <div class="post-info-item">
+                <span class="post-info-label">Max Altitude</span>
+                <span class="post-info-value" id="infoAltitude"></span>
+            </div>
+            <div class="post-info-item">
+                <span class="post-info-label">Region</span>
+                <span class="post-info-value" id="infoRegion"></span>
+            </div>
+        </div>
+
+        <div id="postBody"></div>
+    </article>
+
+    <!-- Related Treks -->
+    <section class="related-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">You Might Also Like</h2>
+            </div>
+            <div class="related-grid" id="relatedGrid"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <span class="logo-icon">&#9968;</span> Best Place for Tracking
+                    <p>Discover, explore, and conquer India's most stunning trekking trails. Built by trekkers, for trekkers.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="tracking-index.html">Home</a>
+                    <a href="tracking-index.html#blogs">Trek Reviews</a>
+                    <a href="tracking-index.html#about">About Us</a>
+                    <a href="tracking-index.html#contact">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Top Treks</h4>
+                    <a href="tracking-post.html?id=1">Great Lakes Trek</a>
+                    <a href="tracking-post.html?id=2">Sudhagad Fort</a>
+                    <a href="tracking-post.html?id=3">Valley of Flowers</a>
+                    <a href="tracking-post.html?id=4">Hampta Pass</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Best Place for Tracking. All rights reserved.</span>
+                <div class="footer-socials">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="tracking-posts.js"></script>
+    <script>
+    // Mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => mainNav.classList.toggle('open'));
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !mainNav.contains(e.target)) {
+                mainNav.classList.remove('open');
+            }
+        });
+    }
+
+    // Load post data
+    const params = new URLSearchParams(window.location.search);
+    const postId = parseInt(params.get('id'));
+    const post = trackingPosts.find(p => p.id === postId);
+
+    if (!post) {
+        window.location.href = 'tracking-index.html';
+    } else {
+        document.title = post.title + ' — Best Place for Tracking';
+        document.getElementById('heroImg').src = post.image;
+        document.getElementById('heroImg').alt = post.title;
+        document.getElementById('postTag').textContent = post.tag;
+        document.getElementById('postTitle').textContent = post.title;
+        document.getElementById('postAuthor').textContent = post.author;
+        document.getElementById('postDate').textContent = post.date;
+        document.getElementById('postRead').textContent = post.readTime;
+        document.getElementById('infoDifficulty').textContent = post.difficulty;
+        document.getElementById('infoDuration').textContent = post.duration;
+        document.getElementById('infoAltitude').textContent = post.altitude;
+        document.getElementById('infoRegion').textContent = post.tag;
+        document.getElementById('postBody').innerHTML = post.content;
+
+        // Related posts
+        const relatedGrid = document.getElementById('relatedGrid');
+        post.related.forEach(rid => {
+            const r = trackingPosts.find(p => p.id === rid);
+            if (r) {
+                relatedGrid.innerHTML += `
+                    <article class="blog-card">
+                        <a href="tracking-post.html?id=${r.id}">
+                            <div class="blog-card-img">
+                                <img src="${r.image}" alt="${r.title}">
+                                <span class="blog-card-tag">${r.tag}</span>
+                            </div>
+                            <div class="blog-card-body">
+                                <div class="blog-card-meta">
+                                    <span>${r.date}</span>
+                                    <span>&#183;</span>
+                                    <span>${r.readTime}</span>
+                                </div>
+                                <h3>${r.title}</h3>
+                            </div>
+                        </a>
+                    </article>`;
+            }
+        });
+    }
+    </script>
+
+</body>
+</html>
